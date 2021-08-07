@@ -147,9 +147,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               );
                             }else{
-                              return Container(
-                                width: 200,
-                              );
+                              return SpecialofferItem(model[position - 1]);
                             }
                           }
                       );
@@ -165,6 +163,70 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container SpecialofferItem(SpecialOfferModel specialOfferModel){
+    return Container(
+      width: 200,
+      height: 300,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        child: Container(
+          width: 200,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.network(specialOfferModel.imgUrl,height: 150,fit: BoxFit.fill,),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(specialOfferModel.productName),
+              ),
+              Expanded(
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10,left: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(specialOfferModel.off_price.toString() + "T",style: TextStyle(fontSize: 20),),
+                              Text(specialOfferModel.price.toString() + "T",style: TextStyle(fontSize: 15,decoration: TextDecoration.lineThrough),),
+                            ],
+                          ),
+                        ),
+                        Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.only(bottom: 10, right: 10),
+                              child: Container(
+                                  decoration: new BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      specialOfferModel.off_precent.toString() +
+                                          "%",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  )),
+                            )),
+                      ],
+                    ),
+                  ),
+              )
+            ],
+          ),
         ),
       ),
     );
