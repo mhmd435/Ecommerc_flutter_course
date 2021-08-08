@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'Model/EventsModel.dart';
 import 'Model/PageViewModel.dart';
 import 'Model/SpecialOfferModel.dart';
 
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   late Future<List<PageViewModel>> pageViewFuture;
   late Future<List<SpecialOfferModel>> SpecialofferFuture;
+  late Future<List<EventsModel>> EventsFuture;
 
 
   PageController pageController = PageController();
@@ -37,6 +39,7 @@ class _HomePageState extends State<HomePage> {
 
     pageViewFuture = SendRequestPageView();
     SpecialofferFuture = SendRequestSpecialOffer();
+    EventsFuture = SendRequestEvents();
 
   }
 
@@ -51,105 +54,170 @@ class _HomePageState extends State<HomePage> {
           IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart_outlined))
         ],
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              height: 250,
-              child: FutureBuilder<List<PageViewModel>>(
-                future: pageViewFuture,
-                builder: (context, snapshot){
-                  if(snapshot.hasData){
-                    List<PageViewModel>? model = snapshot.data;
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                height: 250,
+                child: FutureBuilder<List<PageViewModel>>(
+                  future: pageViewFuture,
+                  builder: (context, snapshot){
+                    if(snapshot.hasData){
+                      List<PageViewModel>? model = snapshot.data;
 
-                    return Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        PageView.builder(
-                            controller: pageController,
-                            allowImplicitScrolling: true,
+                      return Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          PageView.builder(
+                              controller: pageController,
+                              allowImplicitScrolling: true,
+                              itemCount: model!.length,
+                              itemBuilder: (context, position){
+                                return PageViewItems(model[position]);
+                              }
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: SmoothPageIndicator(
+                                controller: pageController,
+                                count: model.length,
+                                effect: ExpandingDotsEffect(
+                                    dotWidth: 10,
+                                    dotHeight: 10,
+                                    spacing: 3,
+                                    dotColor: Colors.white,
+                                    activeDotColor: Colors.red),
+                                // your preferred effect
+                                onDotClicked: (index) =>
+                                    pageController.animateToPage(index,
+                                        duration: Duration(microseconds: 500),
+                                        curve: Curves.bounceOut)
+                            ),
+                          )
+                        ],
+                      );
+                    }else{
+                      return Center(
+                        child: JumpingDotsProgressIndicator(
+                          fontSize: 60,
+                          dotSpacing: 5,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Container(
+                  color: Colors.red,
+                  height: 300,
+                  child: FutureBuilder<List<SpecialOfferModel>>(
+                    future: SpecialofferFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<SpecialOfferModel>? model = snapshot.data;
+
+                        return ListView.builder(
+                            reverse: true,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
                             itemCount: model!.length,
                             itemBuilder: (context, position){
-                              return PageViewItems(model[position]);
+                              if(position == 0){
+                                return Container(
+                                  height: 300,
+                                  width: 200,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 15,left: 10,right: 10),
+                                        child: Image.asset("images/pic0.png",height: 230,),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 5),
+                                        child: Expanded(
+                                          child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                side: BorderSide(color: Colors.white),
+                                              ),
+                                              onPressed: (){},
+                                              child: Text("مشاهده همه",style: TextStyle(color: Colors.white),)),
+                                        ),
+                                      )
+
+                                    ],
+                                  ),
+                                );
+                              }else{
+                                return SpecialofferItem(model[position - 1]);
+                              }
                             }
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: SmoothPageIndicator(
-                              controller: pageController,
-                              count: model.length,
-                              effect: ExpandingDotsEffect(
-                                  dotWidth: 10,
-                                  dotHeight: 10,
-                                  spacing: 3,
-                                  dotColor: Colors.white,
-                                  activeDotColor: Colors.red),
-                              // your preferred effect
-                              onDotClicked: (index) =>
-                                  pageController.animateToPage(index,
-                                      duration: Duration(microseconds: 500),
-                                      curve: Curves.bounceOut)
-                          ),
-                        )
-                      ],
-                    );
-                  }else{
-                    return Center(
-                      child: JumpingDotsProgressIndicator(
-                        fontSize: 60,
-                        dotSpacing: 5,
-                      ),
-                    );
-                  }
-                },
+                        );
+                      } else {
+                        return Center(
+                            child: JumpingDotsProgressIndicator(
+                              fontSize: 60,
+                              dotSpacing: 5,
+                            ));
+                      }
+                    },
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Container(
-                color: Colors.red,
-                height: 300,
-                child: FutureBuilder<List<SpecialOfferModel>>(
-                  future: SpecialofferFuture,
+              Container(
+                height: 500,
+                width: double.infinity,
+                child: FutureBuilder<List<EventsModel>>(
+                  future: EventsFuture,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      List<SpecialOfferModel>? model = snapshot.data;
+                      List<EventsModel>? model = snapshot.data;
 
-                      return ListView.builder(
-                          reverse: true,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: model!.length,
-                          itemBuilder: (context, position){
-                            if(position == 0){
-                              return Container(
-                                height: 300,
-                                width: 200,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 15,left: 10,right: 10),
-                                      child: Image.asset("images/pic0.png",height: 230,),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Expanded(
-                                        child: OutlinedButton(
-                                            style: OutlinedButton.styleFrom(
-                                              side: BorderSide(color: Colors.white),
-                                            ),
-                                            onPressed: (){},
-                                            child: Text("مشاهده همه",style: TextStyle(color: Colors.white),)),
-                                      ),
-                                    )
-
-                                  ],
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  height: 150,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      child: Image.network(model![0].imgUrl,fit: BoxFit.fill,width: 210,)),
                                 ),
-                              );
-                            }else{
-                              return SpecialofferItem(model[position - 1]);
-                            }
-                          }
+                                Container(
+                                  height: 150,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      child: Image.network(model[1].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  height: 150,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      child: Image.network(model[2].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                ),
+                                Container(
+                                  height: 150,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      child: Image.network(model[3].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       );
                     } else {
                       return Center(
@@ -161,8 +229,8 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -232,12 +300,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<List<EventsModel>> SendRequestEvents() async {
+    List<EventsModel> models = [];
+
+    var response = await Dio()
+        .get("http://besenior.ir/flutter_ecom_project/Events/Events.json");
+
+    for (var item in response.data["product"]) {
+      models.add(EventsModel(item["imgUrl"]));
+    }
+
+    return models;
+  }
 
   Future<List<PageViewModel>> SendRequestPageView() async{
     List<PageViewModel> model = [];
 
     var response = await Dio().get("http://besenior.ir/flutter_ecom_project/pageViewAsset/pageViewPics.json");
-    print(response);
 
     for(var item in response.data['photos']){
       model.add(PageViewModel(item['id'],item['imgUrl']));
@@ -251,9 +330,6 @@ class _HomePageState extends State<HomePage> {
 
     var response = await Dio().get(
         "http://besenior.ir/flutter_ecom_project/Specialoffer/specialOffer.json");
-
-    print(response.data);
-    print(response.statusCode);
 
     for (var item in response.data["product"]) {
       models.add(SpecialOfferModel(
