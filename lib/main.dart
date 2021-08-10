@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:untitled/AllProduct.dart';
 
 import 'Model/EventsModel.dart';
 import 'Model/PageViewModel.dart';
@@ -142,7 +143,9 @@ class _HomePageState extends State<HomePage> {
                                               style: OutlinedButton.styleFrom(
                                                 side: BorderSide(color: Colors.white),
                                               ),
-                                              onPressed: (){},
+                                              onPressed: (){
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AllProduct()));
+                                              },
                                               child: Text("مشاهده همه",style: TextStyle(color: Colors.white),)),
                                         ),
                                       )
