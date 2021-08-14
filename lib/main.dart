@@ -181,41 +181,49 @@ class _HomePageState extends State<HomePage> {
                       return Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
+                            padding: const EdgeInsets.only(top: 10.0,left: 10,right: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Container(
-                                  height: 150,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      child: Image.network(model![0].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                Expanded(
+                                  child: Container(
+                                    height: 150,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        child: Image.network(model![0].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                  ),
                                 ),
-                                Container(
-                                  height: 150,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      child: Image.network(model[1].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                Expanded(
+                                  child: Container(
+                                    height: 150,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        child: Image.network(model[1].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
+                            padding: const EdgeInsets.only(top: 10.0,left: 10,right: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Container(
-                                  height: 150,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      child: Image.network(model[2].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                Expanded(
+                                  child: Container(
+                                    height: 150,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        child: Image.network(model[2].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                  ),
                                 ),
-                                Container(
-                                  height: 150,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      child: Image.network(model[3].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                Expanded(
+                                  child: Container(
+                                    height: 150,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        child: Image.network(model[3].imgUrl,fit: BoxFit.fill,width: 210,)),
+                                  ),
                                 ),
                               ],
                             ),
