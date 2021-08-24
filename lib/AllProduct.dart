@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:untitled/BottomNav.dart';
+import 'package:untitled/singleProduct.dart';
 
+import 'GoogleMaps.dart';
 import 'Model/SpecialOfferModel.dart';
 
 class AllProduct extends StatefulWidget {
@@ -36,7 +38,9 @@ class _AllProductState extends State<AllProduct> {
           backgroundColor: Colors.red,
           title: Text("فروشگاه",style: TextStyle(fontFamily: "Vazir"),),
           actions: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.map))
+            IconButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GoogleMaps()));
+            }, icon: Icon(Icons.map))
           ],
         ),
         body: Container(
@@ -68,34 +72,39 @@ class _AllProductState extends State<AllProduct> {
         ));
   }
 
-  Card generateItem(SpecialOfferModel specialOfferModel){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20))
-      ),
-      elevation: 10,
-      child: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Container(
-                width: 90,
-                height: 90,
-                child: Image.network(specialOfferModel.imgUrl),
+  InkWell generateItem(SpecialOfferModel specialOfferModel){
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => singleproduct(specialOfferModel)));
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))
+        ),
+        elevation: 10,
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Container(
+                  width: 90,
+                  height: 90,
+                  child: Image.network(specialOfferModel.imgUrl),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(specialOfferModel.productName),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Text(specialOfferModel.price.toString()),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(specialOfferModel.productName),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Text(specialOfferModel.price.toString()),
+              ),
 
-          ],
-        )
+            ],
+          )
+        ),
       ),
     );
   }

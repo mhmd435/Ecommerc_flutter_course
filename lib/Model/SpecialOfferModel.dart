@@ -20,4 +20,6 @@ class SpecialOfferModel{
   String get productName => _productName;
 
   get id => _id;
+
+
 }
